@@ -1,0 +1,1 @@
+This is a project to create spotify playlists from http://www.showlistaustin.com and Steve Koepke's San Francisco Bay Area concert guide.

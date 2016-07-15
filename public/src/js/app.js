@@ -1,0 +1,1 @@
+angular.module('myApp', ['ngRoute', 'appRoutes', 'ngSanitize', 'MainCtrl', 'ShowlistService', 'directives']);

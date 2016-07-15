@@ -1,0 +1,77 @@
+body {
+	background-color: black;
+}
+
+.step:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms 3;      
+  animation: ellipsis steps(4,end) 900ms 3;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0px;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1.25em;    
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 1.25em;    
+  }
+}
+
+#wrapper {
+	font-family: 'Open Sans', sans-serif;
+	height: 100vh;
+}
+
+#title {
+	 text-align:center; 
+	 color:white;
+}
+#locationform {
+	text-align:center;
+}
+label {
+	font-size: 20px;
+	color: white;
+}
+
+button {
+	font-family: 'Open Sans', sans-serif;
+	border:	2px solid black;
+	border-radius: 16px;
+	background-color: white;
+	font-size: 20px;
+}
+.console {
+	margin-top: 300px;
+}
+.message {
+	font-family: monospace;
+	font-size: 23px;
+	margin-left: 25%;
+	margin-top: 10px;
+	color: white;
+}
+
+@media only screen and (max-width: 1280px) {
+	.message {
+		margin-left: 5%;
+	}
+}
+@media only screen and (max-width: 768px) {
+	.message {
+		font-size: 20px;
+		margin-left: 2%;
+	}
+}
+@media only screen and (max-width: 480px) {
+	.message {
+		font-size: 18px;
+	}
+}

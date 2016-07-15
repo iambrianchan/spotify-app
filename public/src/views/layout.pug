@@ -1,0 +1,24 @@
+doctype html
+html(ng-app="myApp")
+  head
+    title
+        | Spotify Playlist Maker
+        block title
+    meta(charset='utf8')
+    meta(name='author' content='Brian Chan')
+    meta(name='description' content='Make Spotify Playlists')
+    meta(name='viewport' content="width=device-width, initial-scale=1, user-scalable=no")
+    base(href='/')
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css')
+    link(rel='stylesheet' href='src/css/styles.css')
+  body
+    block bodystuff
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.js')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+    script(src='src/js/appRoutes.js')
+    script(src='src/js/app.js')
+    script(src='src/js/MainCtrl.js')
+    script(src='src/js/ShowlistService.js')
+    script(src='src/js/directives.js')

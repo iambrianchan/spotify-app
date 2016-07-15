@@ -1,0 +1,21 @@
+<div id="wrapper">
+<body>
+	<h1 id="title">Spotify Playlist Maker</h1>
+	<div id="main">
+	<form id="locationform" name="myForm">
+	 	<label>
+	 		<div></div>
+	    	<input type="radio" ng-model="location" ng-value="'SFO'">
+	    Bay Area
+	  	</label>
+	  	<label>
+	    	<input type="radio" ng-model="location" ng-value="'ATX'">
+	    Austin
+	  	</label><br/>
+	</form>
+		<button style="display:block; margin: 0 auto; margin-top:20px;" ng-click="getScraped()">Make Playlists for Your Spotify Acc</button>
+		<button style="display:block; margin: 0 auto; margin-top:20px;" ng-click="auth()">Login</button>
+	</div>
+
+	<console-animation></console-animation>
+</div>
