@@ -7,12 +7,6 @@
             controller: 'MainController'
         })
 
-        .when('/callback', {
-        	templateUrl: 'src/views/partials/home.html',
-        	controller: 'MainController'
-        })
-   		.otherwise({redirectTo : '/'})
-
     $locationProvider.html5Mode(true);
 
 }]);

@@ -1,5 +1,5 @@
 body {
-	background-color: black;
+	background-color: #262626;
 }
 
 .step:after {
@@ -58,7 +58,92 @@ button {
 	margin-top: 10px;
 	color: white;
 }
+.heading {
+	text-align: center;
+	color: white;
+}
+.list {
+	float: left;
+	width: 75%;
+	height: 100vh;
+	overflow-y: scroll;
+}
+.inventory {
+	width: 25%;
+	float: left;
+	right: 0;
+}
+.inventory > div {
+	height: 100vh;
+	overflow-y: scroll;
+}
+.inventoryitem {
+	width: 90%;
+	margin: 0 auto;
+	overflow-y: scroll;
+}
+.inventoryitem ul {
+	padding: 0px;
+}
+.inventoryitem a{
+	outline: none;
+	text-decoration: none;
+}
+.venuename {
+	font-size: 20px;
+	text-align: center;
+	color: white;
+}
+.playlist {
+	font-size: 20px;
+	color: white;
+	text-align: center;
+}
+.playlist-items {
+	text-align: left;
+	cursor: pointer;
+	margin: 0 auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.artist {
+	font-size: 12px;
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+    position: relative;
+}
 
+.artist:hover{
+    text-decoration: none;
+}
+.artist::before {
+    border-left: 5px solid transparent;
+    border-top: 5px solid #ffe4b5;
+    border-right: 5px solid transparent;
+    height: 0px;
+    width: 0px;
+    content:'';
+    top: -2px;
+    left: 6px;
+}
+.artist::after {
+    content: attr(artist-name);
+    top: -25px; left: -5px;
+    background: #ffe4b5;
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    color: black;
+}
+
+.artist::after, .artist::before {
+    position: absolute;
+    display: none;
+}
+.artist:hover::after, .artist:hover::before {
+    display: block;
+}
 @media only screen and (max-width: 1280px) {
 	.message {
 		margin-left: 5%;

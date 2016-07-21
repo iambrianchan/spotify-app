@@ -1,7 +1,7 @@
 // public/js/controllers/MainCtrl.js
 angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', '$window', 'showlist', function($scope, $http, $window, showlist) {
 	$scope.location;
-	$scope.progress = {}
+	$scope.progress = {selectedVenues: []};
 	$scope.auth = function() {
 		showlist.authorize()
 		.then(function onSuccess(response) {
@@ -10,37 +10,41 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
 			console.log(error);
 		});	
 	};
-	$scope.getScraped = function() {
+	$scope.getArtists = function() {
 		if ($scope.location == "SFO" || $scope.location == "ATX") {
-			$scope.progress.initialMessage = "finding artists in the " + $scope.location + " area";
-			showlist.scrape($scope.location)
+			showlist.getArtists($scope.location)
 			.then(function onSuccess(response) {
-				var artistCount = response.data;
-				$scope.progress.artistCountMessage =  artistCount + " artists were found, getting their top tracks. This may take a moment.";
-				return $scope.getArtists();
+				$scope.progress.playlists = response.data.venues;
+				$scope.progress.selectedVenues = [];
 			}, function onError(error) {
 				console.log(error);
-			});
+			})
+		}
+		else {
+			$window.alert('Please choose a region!');
 		}
 	}
-	$scope.getArtists = function() {
-		showlist.getArtists()
-		.then(function onSuccess(response) {
-			var playlistCount = response.data;
-			$scope.progress.playlistCountMessage = "adding " + playlistCount + " playlists to your Spotify account";
-			return $scope.makePlaylists();
-		}, function onError(error) {
-			console.log(error);
-		})
-	}
 
-	$scope.makePlaylists = function() {
-		showlist.makePlaylists()
-		.then(function onSuccess(response) {
-			$scope.progress.completionMessage = "your account is now updated with playlists for " + $scope.location + " music venues!";
-			console.log($scope.progress);
+	$scope.selectPlaylist = function() {
+		var index = $scope.progress.selectedVenues.indexOf(this.venue);
+		if (index == -1) {
+			$scope.progress.selectedVenues.push(this.venue);
+		}
+		else {
+			$scope.progress.selectedVenues.splice(index, 1);
+		}
+		return;
+	}
+	$scope.makePlaylists = function () {
+		var venues = [];
+		for (let i = 0; i < $scope.progress.selectedVenues.length; i++) {
+			venues.push($scope.progress.selectedVenues[i].name);
+		}
+		showlist.makePlaylists(venues)
+		.then(function success(response) {
+			$window.alert('Successfully added playlists to your account!');
 		}, function onError(error) {
-			console.log(error);
+			$window.alert('Login first to add selected playlists to your account!');
 		})
 	}
 }]);

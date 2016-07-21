@@ -1,1 +1,1 @@
-angular.module('myApp', ['ngRoute', 'appRoutes', 'ngSanitize', 'MainCtrl', 'ShowlistService', 'directives']);
+var myApp = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'appRoutes', 'ngSanitize', 'MainCtrl', 'ShowlistService', 'directives']);

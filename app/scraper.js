@@ -101,6 +101,7 @@ var atxScraper = function () {
 					listing[0] = listing[0].substr(5);
 				}
 				for (let i = 0; i < listing.length; i++) {
+					listing[i] = listing[i].replace("&", "and");
 					listing[i] = listing[i].toLowerCase();
 				}
 				return listing
@@ -173,6 +174,7 @@ var sfScraper = function() {
 					var artist = artists.eq(k).text();
 					artist = artist.split(/\W\(.+/).join('');
 					if (artist.indexOf(")") == -1) {
+						artist = artist.replace("&", "and").toLowerCase();
 						data[venue].push(artist);
 					}
 				}

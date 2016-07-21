@@ -27,6 +27,7 @@ build/Release
 
 # Dependency directory
 node_modules
+public/components
 
 # Optional npm cache directory
 .npm
@@ -36,6 +37,9 @@ node_modules
 
 # .DS_Store
 .DS_Store
+
+#Environment Variables
+env.json
 
 #heroku
 Procfile
