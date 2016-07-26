@@ -4,6 +4,8 @@ var Q = require('q');
 var request = require('request');
 
 var spotifyApi = {};
+
+// retrieves user id from spotify api.
 spotifyApi.getSpotifyUserId = function(access_token) {
     var deferred = Q.defer();
     var options = {
@@ -29,11 +31,13 @@ spotifyApi.getSpotifyUserId = function(access_token) {
     })
     return deferred.promise;
 }
+
+// finds artist from database, otherwise returns null
 spotifyApi.getArtist = function() {
 	var name = this.name;
 	var spotifyId, track;
 	return Q.fcall(function() {
-		return getArtistIdFromMongo(name)
+		return getArtistFromDatabase(name)
 		.then(function onSuccess(result) {
 	    	if (result) {
 	    		return result;
@@ -49,11 +53,12 @@ spotifyApi.getArtist = function() {
 	})
 
     // function to query db for artist
-	function getArtistIdFromMongo(name) {
+	function getArtistFromDatabase(name) {
 	    return Q(artists.findOne({name: name}).exec())
 	};
 }
 
+// adds artist to database
 spotifyApi.addArtist = function() {
 	var artist = this;
 	return Q.fcall(function() {
@@ -87,9 +92,10 @@ spotifyApi.addArtist = function() {
 	}
 };
 
+// retrieves an artist id from spotify api using an artist name.
 spotifyApi.getArtistId = function() {
 	var artist = this;
-    var parsedArtist = artist.getName().replace('#', '%20');
+    var parsedArtist = artist.name.replace('#', '%20');
     var url = 'https://api.spotify.com/v1/search?q=' + parsedArtist + '&type=artist';
     var deferred = Q.defer();
     request(url, function getArtistId(error, response, body) {
@@ -98,7 +104,7 @@ spotifyApi.getArtistId = function() {
             // get the spotify artist id from the search
             if (JSON.parse(body).artists.items[0]) {
                 var id = JSON.parse(body).artists.items[0].id;
-                artist.setSpotifyArtistId(id);
+                artist.spotifyArtistId = id;
                 deferred.resolve(artist);
 
             }
@@ -125,13 +131,11 @@ spotifyApi.getArtistId = function() {
     return deferred.promise; 	
 }
 
+// retrieves an artist's top track from spotify api using the artist's spotify id.
 spotifyApi.getTopTrack = function () {
 	var artist = this;
 	var deferred = Q.defer();
 	var url = "https://api.spotify.com/v1/artists/" + artist.spotifyArtistId + "/top-tracks?country=US";
-	// if (access_token) {
- //    	url = "https://api.spotify.com/v1/artists/" + artist.spotifyArtistId + "/top-tracks?Authorization=" + access_token + "&country=US";		
-	// }
 
     request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -167,6 +171,7 @@ spotifyApi.getTopTrack = function () {
     return deferred.promise;    	
 }
 
+// retrieves all user playlists from spotify api.
 spotifyApi.getAllUserPlaylists = function (access_token, offset, items) {
     if (!offset) {
         offset = 0;
@@ -203,6 +208,7 @@ spotifyApi.getAllUserPlaylists = function (access_token, offset, items) {
     return deferred.promise;
 }
 
+// removes all tracks from a user's spotify playlist given the spotify playlist id
 spotifyApi.removeAllTracks = function(access_token, spotifyUserId, items) {
 	var self = this;
 	var bodyItems = items.map(function(item, index) {
@@ -236,6 +242,7 @@ spotifyApi.removeAllTracks = function(access_token, spotifyUserId, items) {
 	})
 }
 
+// creates a playlist given the spotify user's id.
 spotifyApi.createPlaylist = function(access_token, spotifyUserId, location) {
 	var self = this;
     var deferred = Q.defer();
@@ -277,6 +284,7 @@ spotifyApi.createPlaylist = function(access_token, spotifyUserId, location) {
     return deferred.promise;
 }
 
+// retrieves all tracks from a spotify playlist.
 spotifyApi.getAllTracks = function(access_token, spotifyUserId) {
 	var self = this;
 	var deferred = Q.defer();
@@ -309,6 +317,7 @@ spotifyApi.getAllTracks = function(access_token, spotifyUserId) {
     return deferred.promise;
 }
 
+// adds an array of tracks to a playlist given the playlist id.
 spotifyApi.addAllTracks = function (access_token, spotifyUserId) {
 	var self = this;
 	var deferred = Q.defer();

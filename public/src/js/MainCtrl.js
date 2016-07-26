@@ -1,7 +1,9 @@
 // public/js/controllers/MainCtrl.js
-angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', '$window', 'showlist', function($scope, $http, $window, showlist) {
+angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope', '$http', '$window', 'showlist', '$cookies', function($scope, $http, $window, showlist, $cookies) {
 	$scope.location;
 	$scope.progress = {selectedVenues: []};
+
+	// authentication route.
 	$scope.auth = function() {
 		showlist.authorize()
 		.then(function onSuccess(response) {
@@ -10,6 +12,8 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
 			console.log(error);
 		});	
 	};
+	
+	// retrieves all playlists from backend.
 	$scope.getArtists = function() {
 		if ($scope.location == "SFO" || $scope.location == "ATX") {
 			showlist.getArtists($scope.location)
@@ -25,6 +29,7 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
 		}
 	}
 
+	// selects a playlist from the list. selected playlists can be added to the account.
 	$scope.selectPlaylist = function() {
 		var index = $scope.progress.selectedVenues.indexOf(this.venue);
 		if (index == -1) {
@@ -35,9 +40,17 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
 		}
 		return;
 	}
+
+	// deselects a playlist.
+	$scope.deselectPlaylist = function () {
+		var index = $scope.progress.selectedVenues.indexOf(this.venue);
+		$scope.progress.selectedVenues.splice(index, 1);
+	}
+
+	// make the playlists
 	$scope.makePlaylists = function () {
 		var venues = [];
-		for (let i = 0; i < $scope.progress.selectedVenues.length; i++) {
+		for (var i = 0; i < $scope.progress.selectedVenues.length; i++) {
 			venues.push($scope.progress.selectedVenues[i].name);
 		}
 		showlist.makePlaylists(venues)
@@ -46,5 +59,20 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
 		}, function onError(error) {
 			$window.alert('Login first to add selected playlists to your account!');
 		})
+	}
+
+	// whether the login button should be shown.
+	$scope.showLogin = function() {
+		var loggedIn = $cookies.get('Logged In');
+		if (loggedIn == 'true') {
+			return false;
+		}
+		return true;
+	}
+
+	// whether the selected playlists should be shown.
+	$scope.isExpanded = false;
+	$scope.expandButton = function() {
+		$scope.isExpanded = !$scope.isExpanded;
 	}
 }]);

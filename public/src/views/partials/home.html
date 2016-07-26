@@ -13,12 +13,9 @@
 	    Austin
 	  	</label><br/>
 	</form>
-	<!-- <action-option></action-option> -->
-		<button style="display:block; margin: 0 auto; margin-top:20px;" ng-click="getArtists()">Find Artists</button>
-		<button style="display:block; margin: 0 auto; margin-top:20px;" ng-click="auth()">Login</button>
+		<button class="controlbutton" ng-click="getArtists()">Find Playlists</button>
+		<button ng-show="showLogin()" class="controlbutton" ng-click="auth()">Login to Spotify</button>
 	</div>
 	<playlists></playlists>
-	<div class="inventory">
-	<inventory></inventory>
-	</div>
+	<inventory ng-class="{'expanded': isExpanded}"class="inventory"></inventory>
 </div>

@@ -2,28 +2,6 @@ body {
 	background-color: #262626;
 }
 
-.step:after {
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 900ms 3;      
-  animation: ellipsis steps(4,end) 900ms 3;
-  content: "\2026"; /* ascii code for the ellipsis character */
-  width: 0px;
-}
-
-@keyframes ellipsis {
-  to {
-    width: 1.25em;    
-  }
-}
-
-@-webkit-keyframes ellipsis {
-  to {
-    width: 1.25em;    
-  }
-}
-
 #wrapper {
 	font-family: 'Open Sans', sans-serif;
 	height: 100vh;
@@ -48,30 +26,42 @@ button {
 	background-color: white;
 	font-size: 20px;
 }
+
+.controlbutton {
+	display:block; 
+	margin: 0 auto; 
+	margin-top:20px;
+	transition: all linear 1.5s;
+	opacity: 1;
+}
+.controlbutton.ng-hide {
+	opacity: 0;
+}
 .console {
 	margin-top: 300px;
 }
-.message {
-	font-family: monospace;
-	font-size: 23px;
-	margin-left: 25%;
-	margin-top: 10px;
-	color: white;
-}
+
 .heading {
 	text-align: center;
 	color: white;
 }
 .list {
 	float: left;
-	width: 75%;
+	width: 97%;
 	height: 100vh;
 	overflow-y: scroll;
 }
 .inventory {
-	width: 25%;
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all opacity 1s ease-in-out;
+    transition: all 1s ease-in-out;
 	float: left;
 	right: 0;
+	top: 0;
+	z-index: 99;
+	position: fixed;
+	height: 100vh;
+	width: 3%;
 }
 .inventory > div {
 	height: 100vh;
@@ -144,19 +134,60 @@ button {
 .artist:hover::after, .artist:hover::before {
     display: block;
 }
+.togglebutton {
+	position: fixed;
+	top: 50%;
+}
+.inventory.expanded {
+	width: 90%;
+	background-color: #121212;
+	position: fixed;
+	height: 100vh;
+	top: 0;
+	opacity: .95;
+}
+.inventorycontent {
+	display: none;
+}
+.inventorycontent.expanded {
+	margin-left: 20px;
+	display: block;
+	transition: all 1s linear;
+}
 @media only screen and (max-width: 1280px) {
-	.message {
-		margin-left: 5%;
-	}
 }
 @media only screen and (max-width: 768px) {
-	.message {
-		font-size: 20px;
-		margin-left: 2%;
-	}
 }
 @media only screen and (max-width: 480px) {
-	.message {
-		font-size: 18px;
+	h2 {
+		font-size: 20px;
+	}
+	.playlist {
+		font-size: 16px;
+	}
+	.playlist-items {
+		-webkit-padding-start: 10px;
+	}
+	.artist {
+		width: 32px;
+		height: 32px;
+	}
+	.list {
+		width: 88%;
+	}
+	.inventory {
+		width: 12%;
+	}
+	button {
+		font-size: 14px;
+	}
+	.togglebutton {
+		font-size: 8px;
+	}
+	.togglebutton span {
+		font-size: 14px;
+	}
+	.togglebutton {
+		margin-right: 10px;
 	}
 }

@@ -12,8 +12,8 @@ var playlistsdb = require('./models/playlist');
 var scraper = require('./scraper');
 var spotifyApi = require('./spotifyapi');
 
-// import environment config 
-var config = require('./../env.json').production;
+// import environment configuration
+var config = require('./../env.json').development;
 var client_id = config.CLIENT_ID;
 var client_secret = config.CLIENT_SECRET;
 var redirect_uri = config.REDIRECT_URI;
@@ -26,11 +26,8 @@ var options = {
 };
 var client = redis.createClient(options);
 
-var access_token, token_type, expires_in, refresh_token, spotifyUserId, location, playlist;
-var isRunning = false;
-
-// venue object is used to store artist data, and playlist id for the venue's playlist.
-// venue object uses four functions from spotifyApi.
+// the venue object will hold three properties: name, artists, and spotifyPlaylistId.
+// the venue object uses four functions from spotifyApi.
 var venue = function(name) {
 	this.name = name;
 	this.artists = [];
@@ -53,32 +50,18 @@ venue.prototype.addArtists = function(artists) {
 	}
 	return;
 };
-venue.prototype.setArtists = function(artists) {
-	this.artists = artists;
-	return;
-};
-venue.prototype.setSpotifyPlaylistId = function(spotifyPlaylistId) {
-	this.spotifyPlaylistId = spotifyPlaylistId;
-	return;
-}
 venue.prototype.removeAllTracks = spotifyApi.removeAllTracks;
 venue.prototype.getAllTracks = spotifyApi.getAllTracks;
 venue.prototype.addAllTracks = spotifyApi.addAllTracks;
 venue.prototype.createPlaylist = spotifyApi.createPlaylist;
 
 
-// artist object is used to store artist id, and top track uri.
+// the artist object will hold four properties: name, track, images, spotifyArtistId.
+// the artist object uses six methods, five from spotifyApi.
 var artist = function(name, track) {
 	this.name = name;
 	if (track) {
 		this.track = track;
-	}
-	this.getName = function() {
-		return this.name;
-	};
-	this.setSpotifyArtistId = function (spotifyArtistId) {
-		this.spotifyArtistId = spotifyArtistId;
-		return;
 	}
 	this.setTrackData = function(trackData) {
 		this.track = trackData.track;
@@ -104,10 +87,6 @@ artist.prototype.updateWithSpotifyData = function(artistModel) {
 
 // use the imported scraper from ./scraper.
 var scrape = function() {
-	if (isRunning) {
-		return;
-	}
-	isRunning = true;
 
 	// utility function for removing venues with few listed artists.
 	function filterPlaylist(playlist) {
@@ -223,53 +202,7 @@ var scrape = function() {
 // module that is used to get spotify artist data.
 var musicians = function(access_token) {
 
-	function getArtistAndTrackData(data) {
-		var venues = Object.keys(data);
-		for (let i = 0; i < venues.length; i++) {
-			var venueName = venues[i];
-			var newVenue = new venue(venueName);
-			var artists = data[venueName].artists;
-			newVenue.addArtists(artists);
-			venues[i] = newVenue;
-		}
-
-		return Q.all(
-			venues.map(function forVenues(venue) {
-				return Q.all(venue.artists.map(function forArtists(artist) {
-					return artist.getArtist()
-					.then(function onSuccess(resultModel) {
-						if (resultModel != null) {
-							artist.updateWithSpotifyData(resultModel);
-						}
-						return artist;
-					})
-				}))
-				.then(function filterOnlyArtistsWithData(arrayOfNewArtists) {
-					for (let i = arrayOfNewArtists.length - 1; i >= 0; i--) {
-						let artist = arrayOfNewArtists[i];
-						if (artist.track == null) {
-							arrayOfNewArtists.splice(i, 1);
-						}
-					}
-					venue.setArtists(arrayOfNewArtists);
-					return venue;
-				})
-			})
-		)
-		.then(function(venues) {
-		    // remove a playlist if it contains less than 9 artists (insignificant)
-	    	for (let i = venues.length - 1; i >= 0; i--) {
-	    		var numartists = venues[i].artists.length;
-	    		if (numartists < 9) {
-	    			venues.splice(i, 1);
-	    		}
-	    	}
-	    	console.log(venues);
-		    return venues;
-		});
-	}
-
-// make this a cron job for app.get('/update');
+// this function is used in daily chrono job.
 	function updateDatabase(data) {
 		var venues = Object.keys(data);
 		for (let i = 0; i < venues.length; i++) {
@@ -279,7 +212,6 @@ var musicians = function(access_token) {
 			newVenue.addArtists(artists);
 			venues[i] = newVenue;
 		};
-		console.log(venues.length);
 		return Q.all(
 			venues.map(function forVenues(venue) {
 				return Q.all(venue.artists.map(function forArtists(artist) {
@@ -300,7 +232,7 @@ var musicians = function(access_token) {
 							results.splice(i, 1)
 						}
 					}
-					venue.setArtists(results);
+					venue.artists = results;
 					return venue;
 				})
 			})
@@ -338,16 +270,7 @@ var musicians = function(access_token) {
 			}
 		}	
 	}
-	function main(location, access_token) {
-		return Q.fcall(function() {
-			return getArtistAndTrackData(playlist)
-			.then(function(result) {
-				return result;
-			})
-		})
-	}
 	return {
-		getArtists: main,
 		updateArtists: updateDatabase
 	}
 }();
@@ -356,7 +279,8 @@ var playlists = function() {
 
 // this is a long method. first the user id is retrieved. then a request to get all playlists. then set playlist id for any matches.
 // it is also important to remove tracks to prevent duplicates in playlist. new playlists are created for those that are not found, and finally tracks are added.
-	function main(access_token, arrayOfIndexesToUpdate) {
+	function main(access_token, arrayOfIndexesToUpdate, location) {
+		var spotifyUserId;
 		// retrieve spotify user id.
 		return Q.fcall(function retrieveUserId() {
 			return spotifyApi.getSpotifyUserId(access_token);
@@ -373,7 +297,7 @@ var playlists = function() {
 					let thePlaylist = arrayOfSpotifyPlaylists[i];
 					if (thePlaylist.name == location + " - " + venue.name) {
 						var spotifyPlaylistId = thePlaylist.id;
-						venue.setSpotifyPlaylistId(spotifyPlaylistId);
+						venue.spotifyPlaylistId = spotifyPlaylistId;
 						return venue;
 					}
 				}
@@ -427,7 +351,7 @@ var playlists = function() {
 	};
 }();
 
-new CronJob('00 00 00 * * *',
+new CronJob('00 35 23 * * *',
 	function() {
 		var start = new Date().getTime();
     	return Q.fcall(function() {
@@ -476,13 +400,13 @@ module.exports = function(app) {
 		port: config.REDIS_PORT
 	}
 	var sessionStore = new RedisStore(options);
-app.use(session({
-	secret: 'doing spotify things',
-	resave: false,
-	saveUninitialized: false,
-	store: sessionStore,
-	cookie: { 'maxAge': 1800000 },
-}))
+	app.use(session({
+		secret: 'doing spotify things',
+		resave: false,
+		saveUninitialized: false,
+		store: sessionStore,
+		cookie: { 'maxAge': 1800000 },
+	}))
     app.get('/callback', function(req, res) {
         var code = req.query.code;
 
@@ -497,44 +421,35 @@ app.use(session({
             if (error) console.log(error)
             if (!error && response.statusCode == 200) {
                 body = JSON.parse(body);
-                access_token = body.access_token;
-                token_type = body.token_type;
-                expires_in = body.expires_in;
-                refresh_token = body.refresh_token;
-
-                req.session.access_token = access_token;
+                req.session.access_token = body.access_token;
+                req.session.refresh_token = body.refresh_token;
             	res.redirect('/');
             }
         });
     });
 
     app.get('/auth', function onSuccess(req, res) {
-        var url = 'https://accounts.spotify.com/authorize?client_id=' + client_id + '&response_type=code' + '&redirect_uri=' + redirect_uri + "&scope=playlist-modify-public"; 
-        res.json(url);
-    });
-    app.get('/scrape/locations/:location', function onSuccess(req, res) {
-    	location = req.params.location;
-    	return Q.fcall(function() {
-    		return scrape.getScrape();
-    	})
-    	.then(function() {
-    		return res.status(200).send();
-    	});
+    	if (req.session.access_token) {
+    		res.send();
+    	}
+        else {
+        	var url = 'https://accounts.spotify.com/authorize?client_id=' + client_id + '&response_type=code' + '&redirect_uri=' + redirect_uri + "&scope=playlist-modify-public"; 
+        	res.json(url);
+        }
     });
     app.get('/locations/:location/artists', function onSuccess(req, res) {
-    	location = req.params.location;
-	    var start = new Date().getTime();
+    	var location = req.params.location;
+    	if (req.session.access_token) {
+    		req.session.location = location;
+    	}
 		return Q(playlistsdb.findOne({name: location}).exec())
 		.then(function(result) {
-			var end = new Date().getTime();
-			var timeElapsed = (end - start) / 1000;
-			console.log('artist retrieval took:', timeElapsed);
 			res.status(200).send(result);
 		})
     });
 	app.post('/playlists', function onSuccess(req, res) {
 		if (req.session.access_token) {
-			var start = new Date().getTime();
+			var location = req.session.location;
 			var body = req.body;
 			var selected = [];
 			return Q(playlistsdb.findOne({name: location}).exec())
@@ -549,22 +464,24 @@ app.use(session({
 					}
 				}
 				return Q.fcall(function() {
-					return playlists.updatePlaylists(req.session.access_token, selected);
+					return playlists.updatePlaylists(req.session.access_token, selected, location);
 				})
 				.then(function() {
-					var end = new Date().getTime();
-					var timeElapsed = (end - start) / 1000;
-					console.log('finished in', timeElapsed);
 					return res.status(200).send();
 				});
 			})
 		}
 		else {
-			console.log('not logged in');
 			res.status(404).send();
 		}
 	})
     app.get('*', function(req, res) {
+    	if (req.session.access_token) {
+     		res.cookie('Logged In', 'true');   		
+    	}
+    	else {
+    		res.cookie('Logged In', 'false');
+    	}
         res.render('index');
     })
 }

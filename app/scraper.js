@@ -9,7 +9,6 @@ var atxScraper = function () {
 		var options = {
 			url: "http://showlistaustin.com"
 		};
-
 		request(options, function scrape(error, response, body) {
 			if (!error && response.statusCode == 200) {
 				callback(body);
@@ -61,7 +60,7 @@ var atxScraper = function () {
 									map[i].shows[venue] = {};
 								};
 								listing.forEach(function addListingToVenue(artist) {
-									map[i].shows[venue][artist] = {};
+									map[i].shows[venue][artist] = true;
 								})
 								break;
 							}
