@@ -102,6 +102,10 @@ var atxScraper = function () {
 				for (let i = 0; i < listing.length; i++) {
 					listing[i] = listing[i].replace("&", "and");
 					listing[i] = listing[i].toLowerCase();
+					if (listing[i] == '') {
+						listing.splice(i, 1);
+						i--;
+					}
 				}
 				return listing
 			}
@@ -174,7 +178,9 @@ var sfScraper = function() {
 					artist = artist.split(/\W\(.+/).join('');
 					if (artist.indexOf(")") == -1) {
 						artist = artist.replace("&", "and").toLowerCase();
-						data[venue].push(artist);
+						if (artist != "") {
+							data[venue].push(artist);
+						}
 					}
 				}
 			}
@@ -205,4 +211,3 @@ var sfScraper = function() {
 
 exports.atxScraper = atxScraper;
 exports.sfScraper = sfScraper;
-

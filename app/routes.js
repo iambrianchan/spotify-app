@@ -13,7 +13,7 @@ var scraper = require('./scraper');
 var spotifyApi = require('./spotifyapi');
 
 // import environment configuration
-var config = require('./../env.json').development;
+var config = require('./../env.json').production;
 var client_id = config.CLIENT_ID;
 var client_secret = config.CLIENT_SECRET;
 var redirect_uri = config.REDIRECT_URI;
@@ -352,6 +352,46 @@ var playlists = function() {
 }();
 
 new CronJob('00 35 23 * * *',
+	function() {
+		var start = new Date().getTime();
+    	return Q.fcall(function() {
+    		return scrape.automateScrapes()
+    		.then(function(result) {
+				return Q.all(result.map(function(city) {
+					return musicians.updateArtists(city.venues)
+					.then(function(filteredVenues) {
+						city.venues = filteredVenues;
+						return city;
+					});
+				}))
+    		})
+    		.then(function(cities) {
+    			return Q.all(cities.map(function(city) {
+    				var deferred = Q.defer();
+    				playlistsdb.findOneAndUpdate(
+    					{name: city.name}, 
+    					{name: city.name, venues: city.venues, date: new Date()},
+    					{upsert: true},
+    					function(error, result) {
+    						if (error) return console.log(error);
+    						deferred.resolve(result);
+    					}
+    				)
+    				return deferred.promise;
+    			}));
+    		})
+    		.then(function() {
+    			var end = new Date().getTime();
+    			var timeElapsed = (end - start) / 1000;
+    			return console.log('update took', timeElapsed);
+    		})
+    	})
+	}, 
+	null, 
+	true, 
+	'America/Los_Angeles'
+);
+new CronJob('00 05 13 * * *',
 	function() {
 		var start = new Date().getTime();
     	return Q.fcall(function() {

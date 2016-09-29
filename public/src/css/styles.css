@@ -148,6 +148,10 @@ button {
 }
 .inventorycontent {
 	display: none;
+	text-align: center;
+}
+div.inventorycontent > div.selectcontainer button {
+	margin: 0px 2px 0px 2px;
 }
 .inventorycontent.expanded {
 	margin-left: 20px;

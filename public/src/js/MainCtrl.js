@@ -9,7 +9,7 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 		.then(function onSuccess(response) {
 			$window.location.href = response.data;
 		}, function onError(error) {
-			console.log(error);
+			return console.log(error);
 		});	
 	};
 	
@@ -18,10 +18,10 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 		if ($scope.location == "SFO" || $scope.location == "ATX") {
 			showlist.getArtists($scope.location)
 			.then(function onSuccess(response) {
-				$scope.progress.playlists = response.data.venues;
+				$scope.progress.playlists = response.data.venues.sort(sortByVenueName);
 				$scope.progress.selectedVenues = [];
 			}, function onError(error) {
-				console.log(error);
+				return console.log(error);
 			})
 		}
 		else {
@@ -29,11 +29,17 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 		}
 	}
 
+	// sort an array of venues by name
+	function sortByVenueName(a, b) {
+		return (a.name.toUpperCase() < b.name.toUpperCase()) ? -1 : (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 : 0;
+	};
+
 	// selects a playlist from the list. selected playlists can be added to the account.
 	$scope.selectPlaylist = function() {
 		var index = $scope.progress.selectedVenues.indexOf(this.venue);
-		if (index == -1) {
+		if (index < 0) {
 			$scope.progress.selectedVenues.push(this.venue);
+			$scope.progress.selectedVenues.sort(sortByVenueName)
 		}
 		else {
 			$scope.progress.selectedVenues.splice(index, 1);
@@ -41,12 +47,14 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 		return;
 	}
 
-	// deselects a playlist.
-	$scope.deselectPlaylist = function () {
-		var index = $scope.progress.selectedVenues.indexOf(this.venue);
-		$scope.progress.selectedVenues.splice(index, 1);
+	$scope.selectAll = function() {
+		$scope.progress.selectedVenues = $scope.progress.playlists.slice(0).sort(sortByVenueName);
+		return;
 	}
-
+	$scope.deselectAll = function() {
+		$scope.progress.selectedVenues = [];
+		return;
+	}
 	// make the playlists
 	$scope.makePlaylists = function () {
 		var venues = [];
