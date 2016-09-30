@@ -65,7 +65,12 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 		.then(function success(response) {
 			$window.alert('Successfully added playlists to your account!');
 		}, function onError(error) {
-			$window.alert('Login first to add selected playlists to your account!');
+			if (error.status == 503) {
+				return $window.alert('Successfully added playlists to your account!');
+			}
+			else {
+				return $window.alert('Login first to add selected playlists to your account!');				
+			}
 		})
 	}
 
