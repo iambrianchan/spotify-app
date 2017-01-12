@@ -85,6 +85,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ng-annotate');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
-  grunt.registerTask('default', ['ngAnnotate', 'uglify', 'modernizr:dist', 'clean', 'nodemon']); 
+  grunt.registerTask('default', ['ngAnnotate', 'uglify', 'cssmin', 'modernizr:dist', 'clean', 'nodemon']); 
 
 };
