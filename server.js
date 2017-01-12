@@ -1,5 +1,6 @@
 // modules
 var express        = require('express');
+var compression    = require('compression');
 var app            = express();
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
@@ -14,10 +15,11 @@ mongoose.connect(db);
 app.set('views', __dirname + '/public/src/views');
 app.set('view engine', 'pug');
 
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(methodOverride('X-HTTP-Method-Override')); 
-app.use(express.static(__dirname + '/public')); 
+app.use(express.static(__dirname + '/')); 
 
 // enable cors
 app.use(function (req, res, next) {

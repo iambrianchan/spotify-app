@@ -3,7 +3,7 @@
 
     $routeProvider
         .when('/', {
-            templateUrl: 'src/views/partials/home.html',
+            templateUrl: 'public/src/views/partials/home.html',
             controller: 'MainController'
         })
         .otherwise('/');
