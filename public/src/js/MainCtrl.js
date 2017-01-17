@@ -1,6 +1,5 @@
 // public/js/controllers/MainCtrl.js
 angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope', '$http', '$window', 'showlist', '$cookies', function($scope, $http, $window, showlist, $cookies) {
-	$scope.location;
 	$scope.progress = {selectedVenues: []};
 
 	// authentication route.
@@ -22,39 +21,41 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 				$scope.progress.selectedVenues = [];
 			}, function onError(error) {
 				return console.log(error);
-			})
+			});
 		}
 		else {
 			$window.alert('Please choose a region!');
 		}
-	}
+	};
 
 	// sort an array of venues by name
 	function sortByVenueName(a, b) {
 		return (a.name.toUpperCase() < b.name.toUpperCase()) ? -1 : (a.name.toUpperCase() > b.name.toUpperCase()) ? 1 : 0;
-	};
+	}
 
 	// selects a playlist from the list. selected playlists can be added to the account.
 	$scope.selectPlaylist = function() {
 		var index = $scope.progress.selectedVenues.indexOf(this.venue);
 		if (index < 0) {
 			$scope.progress.selectedVenues.push(this.venue);
-			$scope.progress.selectedVenues.sort(sortByVenueName)
+			$scope.progress.selectedVenues.sort(sortByVenueName);
 		}
 		else {
 			$scope.progress.selectedVenues.splice(index, 1);
 		}
 		return;
-	}
+	};
 
 	$scope.selectAll = function() {
 		$scope.progress.selectedVenues = $scope.progress.playlists.slice(0).sort(sortByVenueName);
 		return;
-	}
+	};
+
 	$scope.deselectAll = function() {
 		$scope.progress.selectedVenues = [];
 		return;
-	}
+	};
+
 	// make the playlists
 	$scope.makePlaylists = function () {
 		var venues = [];
@@ -71,8 +72,8 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 			else {
 				return $window.alert('Login first to add selected playlists to your account!');				
 			}
-		})
-	}
+		});
+	};
 
 	// whether the login button should be shown.
 	$scope.showLogin = function() {
@@ -81,11 +82,11 @@ angular.module('MainCtrl', ['ngCookies']).controller('MainController', ['$scope'
 			return false;
 		}
 		return true;
-	}
+	};
 
 	// whether the selected playlists should be shown.
 	$scope.isExpanded = false;
 	$scope.expandButton = function() {
 		$scope.isExpanded = !$scope.isExpanded;
-	}
+	};
 }]);

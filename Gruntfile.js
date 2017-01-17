@@ -26,6 +26,15 @@ module.exports = function(grunt) {
     	}
     },
 
+    // jshint
+    jshint: {
+      options: {
+        reporter: require('jshint-stylish')
+      },
+
+      build: ['Grunfile.js', 'public/src/js/*.js']
+    },
+
     // annotate angular files
     ngAnnotate: {
       options: {
@@ -80,11 +89,12 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-modernizr');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-ng-annotate');
   grunt.loadNpmTasks('grunt-contrib-clean');
 
-  grunt.registerTask('default', ['ngAnnotate', 'uglify', 'cssmin', 'modernizr:dist', 'clean', 'nodemon']); 
+  grunt.registerTask('default', ['jshint', 'ngAnnotate', 'uglify', 'cssmin', 'modernizr:dist', 'clean', 'nodemon']); 
 
 };

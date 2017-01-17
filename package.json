@@ -23,9 +23,12 @@
     "grunt": "*",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-cssmin": "^1.0.2",
+    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-modernizr": "^1.0.2",
     "grunt-ng-annotate": "^3.0.0",
-    "grunt-nodemon": "*"
+    "grunt-nodemon": "*",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1"
   }
 }

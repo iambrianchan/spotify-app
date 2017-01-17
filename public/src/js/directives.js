@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 angular.module('directives', [])
 
@@ -8,8 +8,10 @@ angular.module('directives', [])
 		replace: true,
 		template: "<div class='list'></div>",
 		link: function(scope, element, attributes) {
+			"use strict";
+
 			scope.$watch("progress.playlists", function callback(newValue, oldValue) {
-				if (newValue != undefined && $(element).find('h2.heading').length == 0) {
+				if (newValue !== undefined && $(element).find('h2.heading').length === 0) {
 					var heading, playlistHolder;
 					heading = angular.element("<h2 class='heading'>Available Playlists:</h2>");
 					element.append(heading);
@@ -18,7 +20,7 @@ angular.module('directives', [])
 				}
 			});
 		}
-	}
+	};
 })
 .directive('inventory', function($compile) {
 	return {
@@ -27,10 +29,12 @@ angular.module('directives', [])
 		template: "<div></div>",
 		link: function(scope, element, attributes) {
 			scope.$watch("progress.playlists", function callback(newValue, oldValue) {
+				"use strict";
+
 				if (scope.progress.playlists) {
-					if ($(element).children('h2.heading').length == 0) {
+					if ($(element).children('h2.heading').length === 0) {
 						var addButton, selectContainer, selectAll, deselectAll, heading, toggleButton, accordion, accordionGroups, container;
-						selectContainer = angular.element("<div></div>").addClass("selectcontainer")
+						selectContainer = angular.element("<div></div>").addClass("selectcontainer");
 						selectAll = $compile(angular.element("<button ng-click='selectAll()'></button>").text("Select All"))(scope);
 						deselectAll = $compile(angular.element("<button ng-click='deselectAll()'></button>").text("Deselect All"))(scope);
 						toggleButton = $compile(angular.element("<button class='togglebutton' ng-click='expandButton()'><span ng-class=\"{'glyphicon glyphicon-chevron-left': !isExpanded, 'glyphicon glyphicon-chevron-right': isExpanded}\"></span></button>"))(scope);
@@ -47,5 +51,5 @@ angular.module('directives', [])
 				}
 			});
 		}
-	}
-})
+	};
+});
