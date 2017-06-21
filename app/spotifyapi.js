@@ -59,13 +59,13 @@ spotifyApi.getArtist = function() {
 }
 
 // adds artist to database
-spotifyApi.addArtist = function() {
+spotifyApi.addArtist = function(token) {
 	var artist = this;
 	return Q.fcall(function() {
-		return artist.getArtistId()
+		return artist.getArtistId(token)
 		.then(function(artist) {
 			if (artist != null) {
-				return artist.getTopTrack()
+				return artist.getTopTrack(token)
 				.then(function(artist) {
 					if (artist != null) {
 						return saveArtistToMongo(artist);
@@ -93,12 +93,19 @@ spotifyApi.addArtist = function() {
 };
 
 // retrieves an artist id from spotify api using an artist name.
-spotifyApi.getArtistId = function() {
+spotifyApi.getArtistId = function(token) {
 	var artist = this;
-    var parsedArtist = artist.name.replace('#', '%20');
+    var parsedArtist = artist.name.split('#').join('%20');
+    parsedArtist = parsedArtist.split(' ').join('%20');
     var url = 'https://api.spotify.com/v1/search?q=' + parsedArtist + '&type=artist';
     var deferred = Q.defer();
-    request(url, function getArtistId(error, response, body) {
+    var options = {
+        url: url,
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    };
+    request(options, function getArtistId(error, response, body) {
         if (!error && response.statusCode == 200) {
 
             // get the spotify artist id from the search
@@ -114,17 +121,17 @@ spotifyApi.getArtistId = function() {
             }
         }
         else if (error) {
-            deferred.resolve(artist.getArtistId());
+            deferred.resolve(artist.getArtistId(token));
         }
         else if (response.statusCode == 429) {
             var delay = (response.headers['retry-after'] + 1) * 1000;
             setTimeout(function() {
-            deferred.resolve(artist.getArtistId());
+            deferred.resolve(artist.getArtistId(token));
             }, delay)
         }
 
         else {
-            deferred.resolve(artist.getArtistId());
+            deferred.resolve(artist.getArtistId(token));
         };
     })
 
@@ -132,12 +139,19 @@ spotifyApi.getArtistId = function() {
 }
 
 // retrieves an artist's top track from spotify api using the artist's spotify id.
-spotifyApi.getTopTrack = function () {
+spotifyApi.getTopTrack = function (token) {
 	var artist = this;
 	var deferred = Q.defer();
 	var url = "https://api.spotify.com/v1/artists/" + artist.spotifyArtistId + "/top-tracks?country=US";
 
-    request(url, function (error, response, body) {
+    var options = {
+        url: url,
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    };
+
+    request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var tracks = JSON.parse(body).tracks;
             if (tracks.length > 0) {
@@ -155,17 +169,17 @@ spotifyApi.getTopTrack = function () {
         }
 
         else if (error) {
-            deferred.resolve(artist.getTopTrack());
+            deferred.resolve(artist.getTopTrack(token));
         }
 
         else if (response.statusCode == 429) {
             var delay = (response.headers['retry-after'] + 1) * 1000;
             setTimeout(function() {
-                deferred.resolve(artist.getTopTrack());
+                deferred.resolve(artist.getTopTrack(token));
             }, delay)
         }
         else {
-        	deferred.resolve(artist.getTopTrack());
+        	deferred.resolve(artist.getTopTrack(token));
         }
     })
     return deferred.promise;    	

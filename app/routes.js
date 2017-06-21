@@ -203,7 +203,7 @@ var scrape = function() {
 var musicians = function(access_token) {
 
 // this function is used in daily chrono job.
-	function updateDatabase(data) {
+	function updateDatabase(access_token, data) {
 		var venues = Object.keys(data);
 		for (let i = 0; i < venues.length; i++) {
 			let venueName = venues[i];
@@ -214,6 +214,7 @@ var musicians = function(access_token) {
 		};
 		return Q.all(
 			venues.map(function forVenues(venue) {
+				// console.log(venue);
 				return Q.all(venue.artists.map(function forArtists(artist) {
 	    			return Q(artists.findOne({name: artist.name}).exec())
 	    			.then(function callback(result) {
@@ -221,12 +222,11 @@ var musicians = function(access_token) {
 	    					return result;
 	    				}
 	  					else {
-	  						return artist.addArtist();
+	  						return artist.addArtist(access_token);
 	  					}
 	    			})
 				}))
 				.then(function(results) {
-					console.log(venue.name);
 					for (let i = results.length - 1; i >= 0; i--) {
 						if (results[i] == null) {
 							results.splice(i, 1)
@@ -351,14 +351,34 @@ var playlists = function() {
 	};
 }();
 
-new CronJob('00 05 08 * * *',
+new CronJob('00 05 09 * * *',
 	function() {
 		var start = new Date().getTime();
-    	return Q.fcall(function() {
+
+        return Q.fcall(function() {
+        	var deferred = Q.defer();
+
+        	request.post('https://accounts.spotify.com/api/token', {form: 
+	        {grant_type: "client_credentials",
+	        client_id: client_id,
+	        "token_type": "bearer",
+	        client_secret: client_secret
+	        }},
+	        function (error, response, body) {
+	            if (error) console.log(error)
+	            if (!error && response.statusCode == 200) {
+	                body = JSON.parse(body);
+	                deferred.resolve(body);
+	            }
+	        });
+
+	        return deferred.promise;
+	    })
+    	.then(function(token) {
     		return scrape.automateScrapes()
     		.then(function(result) {
 				return Q.all(result.map(function(city) {
-					return musicians.updateArtists(city.venues)
+					return musicians.updateArtists(token.access_token, city.venues)
 					.then(function(filteredVenues) {
 						city.venues = filteredVenues;
 						return city;
@@ -395,11 +415,31 @@ new CronJob('00 05 08 * * *',
 new CronJob('00 05 20 * * *',
 	function() {
 		var start = new Date().getTime();
-    	return Q.fcall(function() {
+
+        return Q.fcall(function() {
+        	var deferred = Q.defer();
+
+        	request.post('https://accounts.spotify.com/api/token', {form: 
+	        {grant_type: "client_credentials",
+	        client_id: client_id,
+	        "token_type": "bearer",
+	        client_secret: client_secret
+	        }},
+	        function (error, response, body) {
+	            if (error) console.log(error)
+	            if (!error && response.statusCode == 200) {
+	                body = JSON.parse(body);
+	                deferred.resolve(body);
+	            }
+	        });
+
+	        return deferred.promise;
+	    })
+    	.then(function(token) {
     		return scrape.automateScrapes()
     		.then(function(result) {
 				return Q.all(result.map(function(city) {
-					return musicians.updateArtists(city.venues)
+					return musicians.updateArtists(token.access_token, city.venues)
 					.then(function(filteredVenues) {
 						city.venues = filteredVenues;
 						return city;
@@ -451,7 +491,7 @@ module.exports = function(app) {
 	}))
     app.get('/callback', function(req, res) {
         var code = req.query.code;
-
+        
         request.post('https://accounts.spotify.com/api/token', {form: 
         {grant_type: "authorization_code",
         code: code,
