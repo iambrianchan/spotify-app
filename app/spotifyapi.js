@@ -121,7 +121,8 @@ spotifyApi.getArtistId = function(token) {
             }
         }
         else if (error) {
-            deferred.resolve(artist.getArtistId(token));
+            // deferred.resolve(artist.getArtistId(token));
+            deferred.resolve(null);
         }
         else if (response.statusCode == 429) {
             var delay = (response.headers['retry-after'] + 1) * 1000;

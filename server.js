@@ -8,7 +8,7 @@ var mongoose       = require('mongoose');
 
 // configuration
 var db = require('./env.json').production.db;
-var port = process.env.PORT || 4000; 
+var port = process.env.PORT || 8080; 
 
 mongoose.connect(db); 
 
@@ -19,7 +19,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(methodOverride('X-HTTP-Method-Override')); 
-app.use(express.static(__dirname + '/')); 
+app.use(express.static(__dirname + '/'));
 
 // enable cors
 app.use(function (req, res, next) {

@@ -214,7 +214,6 @@ var musicians = function(access_token) {
 		};
 		return Q.all(
 			venues.map(function forVenues(venue) {
-				// console.log(venue);
 				return Q.all(venue.artists.map(function forArtists(artist) {
 	    			return Q(artists.findOne({name: artist.name}).exec())
 	    			.then(function callback(result) {
@@ -234,7 +233,7 @@ var musicians = function(access_token) {
 					}
 					venue.artists = results;
 					return venue;
-				})
+				});
 			})
 		)
 		.then(function() {
@@ -351,71 +350,9 @@ var playlists = function() {
 	};
 }();
 
-new CronJob('00 05 09 * * *',
+new CronJob('00 00 00 * * *',
 	function() {
 		var start = new Date().getTime();
-
-        return Q.fcall(function() {
-        	var deferred = Q.defer();
-
-        	request.post('https://accounts.spotify.com/api/token', {form: 
-	        {grant_type: "client_credentials",
-	        client_id: client_id,
-	        "token_type": "bearer",
-	        client_secret: client_secret
-	        }},
-	        function (error, response, body) {
-	            if (error) console.log(error)
-	            if (!error && response.statusCode == 200) {
-	                body = JSON.parse(body);
-	                deferred.resolve(body);
-	            }
-	        });
-
-	        return deferred.promise;
-	    })
-    	.then(function(token) {
-    		return scrape.automateScrapes()
-    		.then(function(result) {
-				return Q.all(result.map(function(city) {
-					return musicians.updateArtists(token.access_token, city.venues)
-					.then(function(filteredVenues) {
-						city.venues = filteredVenues;
-						return city;
-					});
-				}))
-    		})
-    		.then(function(cities) {
-    			return Q.all(cities.map(function(city) {
-    				var deferred = Q.defer();
-    				playlistsdb.findOneAndUpdate(
-    					{name: city.name}, 
-    					{name: city.name, venues: city.venues, date: new Date()},
-    					{upsert: true},
-    					function(error, result) {
-    						if (error) return console.log(error);
-    						deferred.resolve(result);
-    					}
-    				)
-    				return deferred.promise;
-    			}));
-    		})
-    		.then(function() {
-    			var end = new Date().getTime();
-    			var timeElapsed = (end - start) / 1000;
-    			return console.log('update took', timeElapsed);
-    		})
-    	})
-	}, 
-	null, 
-	true, 
-	'Europe/London'
-);
-
-new CronJob('00 05 20 * * *',
-	function() {
-		var start = new Date().getTime();
-
         return Q.fcall(function() {
         	var deferred = Q.defer();
 
