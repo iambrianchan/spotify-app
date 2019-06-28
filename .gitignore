@@ -27,7 +27,6 @@ build/Release
 
 # Dependency directory
 node_modules
-public/components
 dist
 
 # Optional npm cache directory
@@ -41,6 +40,3 @@ dist
 
 #Environment Variables
 env.json
-
-#heroku
-Procfile

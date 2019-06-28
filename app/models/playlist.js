@@ -5,14 +5,17 @@ var Schema = mongoose.Schema;
 var ArtistSchema = new Schema({
 	name: String,
 	spotifyArtistId: String,
-	track: String,
-	images: []
+	track: Object,
+	images: [],
+	popularity: Number,
+	genres: [],
+	followers: Number
 });
 
 var VenueSchema = new Schema({
 	name: String,
 	artists: [ArtistSchema]
-})
+});
 
 var PlaylistSchema = new Schema({
 	name: String,
