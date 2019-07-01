@@ -31,6 +31,7 @@ spot.getAllCurrentUserPlaylists = async function(spotifyApi, userId) {
 spot.createUserPlaylist = async function(spotifyApi, userId, playlist, location) {
 	return new Promise(function(resolve, reject) {
 		let playlistName = playlist.name + ", " + location;
+		
 		spotifyApi.createPlaylist(userId, playlistName, {'public': true})
 			.then(function(data) {
 				playlist.spotifyPlaylistId = data.body.id;

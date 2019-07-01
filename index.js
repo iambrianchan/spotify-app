@@ -10,7 +10,7 @@ var mongoose       = require('mongoose');
 var db = require('./env.json').production.db;
 var port = process.env.PORT || 8080; 
 
-mongoose.connect(db); 
+mongoose.connect(db, { useNewUrlParser: true }); 
 
 app.set('views', __dirname + '/public/src/views');
 app.set('view engine', 'pug');
