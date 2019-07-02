@@ -9,7 +9,10 @@ body {
 
 #title {
 	 text-align:center; 
-	 color:white;
+	 color:black;
+}
+#title h1, h4 {
+	color: white;
 }
 #locationform {
 	text-align:center;
@@ -157,6 +160,34 @@ div.inventorycontent > div.selectcontainer button {
 	margin-left: 20px;
 	display: block;
 	transition: all 1s linear;
+}
+.save-button {
+	display: block;
+	margin: auto;
+}
+.venue {
+	text-align: right;
+	padding: 10px 10px 20px 10px;
+	margin: 20px 20px 20px 20px;
+	border-radius: 16px;
+}
+.active-venue {
+	background-color: #FFE39F;
+}
+.venue div.venue-title {
+	font-size: 24px;
+	color: white;
+}
+.venue.active-venue div.venue-title {
+	color: black;
+}
+.venue img {
+	font-size: 12px;
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+    position: relative;
+	object-fit: cover;
 }
 @media only screen and (max-width: 1280px) {
 }

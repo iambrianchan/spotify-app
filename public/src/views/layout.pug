@@ -1,5 +1,5 @@
 doctype html
-html(ng-app="myApp")
+html
   head
     title
         | Spotify Playlist Maker
@@ -11,17 +11,10 @@ html(ng-app="myApp")
     base(href='/')
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet')
     link(href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css')
-    link(rel='stylesheet' href='dist/css/styles.min.css')
+    link(rel='stylesheet' href='build/assets/css/styles.min.css')
   body
     block bodystuff
-    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js')
-    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js')
-    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
-    script(src='/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js')
-    script(src='node_modules/angular-google-analytics/dist/angular-google-analytics.min.js')
-    script(src='dist/js/appRoutes.min.js')
-    script(src='dist/js/app.min.js')
-    script(src='dist/js/MainCtrl.min.js')
-    script(src='dist/js/ShowlistService.min.js')
-    script(src='dist/js/directives.min.js')
+    script(src="https://unpkg.com/react@16/umd/react.production.min.js")
+    script(src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js")
+    script(src='/build/assets/js/bundle.js')

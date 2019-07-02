@@ -142,12 +142,11 @@ module.exports = function(app) {
     	}
 
 		let authorizeUrl = await spotifyApi.createAuthorizeURL(scopes);
-    	console.log(authorizeUrl);
     	return res.json(authorizeUrl);
     });
 
     // get the artists in a city.
-    app.get('/locations/:location/artists', async function (req, res) {
+    app.get('/cities/:location', async function (req, res) {
     	let location = req.params.location;
     	if (req.session.access_token) {
     		req.session.location = location;
@@ -157,7 +156,7 @@ module.exports = function(app) {
 			if (!error) {
 				return res.status(200).send(data);
 			}
-			console.log("And error occurred retrieving a city:", error);
+			console.log("An error occurred retrieving a city:", error);
 			return res.status(500).send();
 		});
     });
