@@ -4,6 +4,9 @@ import CityStore from './../cityStore';
 class Toggle extends React.Component {
 	constructor() {
 		super();
+		this.state = {
+			active: false,
+		};
 		this.changeCity = this.changeCity.bind(this);
 	};
 
@@ -13,12 +16,24 @@ class Toggle extends React.Component {
 	};
 
 	componentWillMount() {
-
+		CityStore.on("city change", async () => {
+			let currentCity = await CityStore.getCity();
+			if (currentCity.name == this.props.name) {
+				this.setState({
+					active: true
+				});
+			}
+			else {
+				this.setState({
+					active: false
+				});
+			}
+		});
 	};
 
 	render() {
 		return (
-			<button onClick={this.changeCity}>{this.props.webname}</button>
+			<button className={this.state.active == true ? 'toggle-active' : 'toggle'} onClick={this.changeCity}>{this.props.webname}</button>
 		)
 	};
 }

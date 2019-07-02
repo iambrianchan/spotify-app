@@ -1,0 +1,126 @@
+$black: #0D0D0D;
+$orange: #D97904;
+$yellow: #F2CB05;
+$white: #EBEDF2;
+$darkgray: #373740;
+$lightgray: #D5E2F2;
+
+body {
+	background-color: $black;
+	font-family: 'Open Sans', sans-serif;	
+}
+
+#title {
+	 text-align:center; 
+	 color:black;
+	 margin: 0px 0px 40px 0px;
+
+}
+#title h1, h4 {
+	color: $white;
+}
+
+button {
+	font-size: 20px;
+	margin: 8px 8px 8px 8px;
+	background: $white;
+	border-radius: 5px;
+	border: 2px solid $darkgray;
+	transition: all 0.1s ease-out;
+  &:hover {
+    border-radius: 25px;
+    transform: translateY(0);
+    border-color: $orange;
+    background: transparent;
+    color: $yellow;
+    font-weight: bold;
+  }
+  &:active {
+    box-shadow: inset 0px 0px 10px 0px rgba(darken($orange, 10%), 0.9);
+    border-color: lighten($orange, 1%);
+    background: $yellow;
+    color: $white;
+  }
+}
+
+.toggle {
+
+}
+.toggle-active {
+	background-color: $yellow;
+}
+.save-button {
+	display: block;
+	margin: auto;
+}
+.venue {
+	text-align: right;
+	padding: 10px 10px 20px 10px;
+	margin: 20px 20px 20px 20px;
+	border-radius: 16px;
+	cursor: pointer;
+}
+.venue:hover {
+	background-color: $orange;
+	box-shadow: 10px 10px $darkgray;
+	text-shadow: 1px 1px 1px;
+}
+.venue:hover div.venue-title {
+	color: $black
+}
+.active-venue {
+	background-color: #FFE39F;
+}
+.venue div.venue-title {
+	font-size: 24px;
+	color: $white;
+}
+
+.venue.active-venue div.venue-title {
+	color: black;
+}
+.venue img {
+	font-size: 12px;
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+    position: relative;
+	object-fit: cover;
+}
+@media only screen and (max-width: 1280px) {
+}
+@media only screen and (max-width: 768px) {
+}
+@media only screen and (max-width: 480px) {
+	h2 {
+		font-size: 20px;
+	}
+	.playlist {
+		font-size: 16px;
+	}
+	.playlist-items {
+		-webkit-padding-start: 10px;
+	}
+	.artist {
+		width: 32px;
+		height: 32px;
+	}
+	.list {
+		width: 88%;
+	}
+	.inventory {
+		width: 12%;
+	}
+	button {
+		font-size: 14px;
+	}
+	.togglebutton {
+		font-size: 8px;
+	}
+	.togglebutton span {
+		font-size: 14px;
+	}
+	.togglebutton {
+		margin-right: 10px;
+	}
+}

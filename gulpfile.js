@@ -1,10 +1,10 @@
 "use strict";
 
 // Load plugins
-// const autoprefixer = require("autoprefixer");
+const autoprefixer = require("autoprefixer");
 const browsersync = require("browser-sync").create();
 const cp = require("child_process");
-// const cssnano = require("cssnano");
+const cssnano = require("cssnano");
 const del = require("del");
 const eslint = require("gulp-eslint");
 const gulp = require("gulp");
@@ -13,12 +13,12 @@ const newer = require("gulp-newer");
 const plumber = require("gulp-plumber");
 const pug = require("gulp-pug");
 const postcss = require("gulp-postcss");
-const cssmin = require("gulp-cssmin");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const webpack = require("webpack");
 const webpackconfig = require("./webpack.config.js");
 const webpackstream = require("webpack-stream");
+
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
@@ -74,13 +74,11 @@ function pugTask() {
 // CSS task
 function css() {
   return gulp
-    .src("./public/src/**/*.css")
+    .src("./public/src/**/*.scss")
     .pipe(plumber())
-    .pipe(cssmin())
-    // .pipe(sass({ outputStyle: "expanded" }))
-    // .pipe(gulp.dest("./build/assets/"))
+    .pipe(sass({ outputStyle: "expanded" }))
     .pipe(rename({ suffix: ".min" }))
-    // .pipe(postcss([autoprefixer(), cssnano()]))
+    .pipe(postcss([autoprefixer(), cssnano()]))
     .pipe(gulp.dest("./build/assets/"))
     .pipe(browsersync.stream());
 }

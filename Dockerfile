@@ -11,4 +11,6 @@ COPY . .
 
 EXPOSE 8080
 
+RUN ./node_modules/gulp/bin/gulp.js
+
 CMD ["node", "index.js"]
