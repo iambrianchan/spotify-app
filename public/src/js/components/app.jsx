@@ -28,10 +28,19 @@ class App extends React.Component {
 
 	render() {
 		// map an array of Venue components.
+		// Handle no venues.
 		var allVenues = function() {
 			return <div />
 		}
+		// Sort the venues by name, then use map to create an array of Venue components.
 		if (this.state.city.name) {
+			allVenues = this.state.city.venues;
+			allVenues.sort((a, b) => {
+				if (a.name < b.name) {
+					return -1;
+				}
+				return 1;
+			});
 			allVenues = this.state.city.venues.map(venue => {
 				return(
 					<Venue key={venue._id} venue={venue}/>
