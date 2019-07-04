@@ -7,7 +7,7 @@ var methodOverride = require('method-override');
 var mongoose       = require('mongoose');
 
 // configuration
-var db = require('./env.json').production.db;
+var db = process.env.SPOTIFY_DB;
 var port = process.env.PORT || 8080; 
 
 mongoose.connect(db, { useNewUrlParser: true }); 

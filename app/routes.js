@@ -3,11 +3,12 @@ var session = require('express-session');
 var redis = require("redis");
 var RedisStore = require('connect-redis')(session);
 var SpotifyWebApi = require("spotify-web-api-node");
-var env = require('./../env.json').production;
+
+// set credentials from environment variables.
 var credentials = {
-  clientId: env.CLIENT_ID,
-  clientSecret: env.CLIENT_SECRET,
-  redirectUri: env.REDIRECT_URI
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
 };
 
 // instantiate the spotifyApi and import the spotify helper
@@ -20,9 +21,9 @@ var playlistsSchema = require('./models/playlist');
 
 // create redis client
 var options = {
-	host: env.REDIS_SERVER,
-	port: env.REDIS_PORT,
-	password: env.REDIS_PASS
+	host: process.env.REDIS_SERVER,
+	port: process.env.REDIS_PORT,
+	password: process.env.REDIS_PASS
 };
 var client = redis.createClient(options);
 
