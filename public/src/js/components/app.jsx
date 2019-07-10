@@ -53,8 +53,9 @@ class App extends React.Component {
 				<div id='title'>
 					<h1>Your Venues, On Spotify</h1>
 					<h4>Choose a city, pick some venues, create playlists</h4>
-					<Toggle name='ATX' webname='Austin'/>
-					<Toggle name='SFO' webname='San Francisco' />
+					<Toggle name='Austin'/>
+					<Toggle name='San Francisco'/>
+					<Toggle name='New York City'/> 
 					<SaveButton />
 					<LoginButton />
 				</div>

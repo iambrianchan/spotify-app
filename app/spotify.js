@@ -48,6 +48,9 @@ spot.replaceAllTracksInPlaylist = async function(spotifyApi, userId, playlist) {
 		let tracks = playlist.artists.map(function(artist) {
 			return artist.track.trackUri;
 		});
+		if (tracks.length > 100) {
+			tracks = tracks.slice(0, 100);
+		}
 
 		if (playlist.spotifyPlaylistId) {
 			spotifyApi.replaceTracksInPlaylist(playlist.spotifyPlaylistId, tracks)

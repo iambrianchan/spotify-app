@@ -33,7 +33,7 @@ class Toggle extends React.Component {
 
 	render() {
 		return (
-			<button className={this.state.active == true ? 'toggle-active' : 'toggle'} onClick={this.changeCity}>{this.props.webname}</button>
+			<button className={this.state.active == true ? 'toggle-active' : 'toggle'} onClick={this.changeCity}>{this.props.name}</button>
 		)
 	};
 }
