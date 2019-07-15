@@ -14,7 +14,8 @@ var ArtistSchema = new Schema({
 
 var VenueSchema = new Schema({
 	name: String,
-	artists: [ArtistSchema]
+	artists: [ArtistSchema],
+	spotifyPlaylistId: String
 });
 
 var PlaylistSchema = new Schema({
