@@ -30,7 +30,6 @@ var client = redis.createClient(options);
 // create playlists for the user
 async function playlists(req) {
 	return new Promise(async function(resolve, reject) {
-		try {
 			spotifyApi.setAccessToken(req.session.access_token);
 			spotifyApi.setRefreshToken(req.session.refresh_token);
 			let location = req.session.location;
@@ -62,45 +61,19 @@ async function playlists(req) {
 			// Get the current user id.
 			const theCurrentUserId = await spot.getCurrentUser(spotifyApi);
 
-			// Get the current user's playlists.
-			const theCurrentUserPlaylists = await spot.getAllCurrentUserPlaylists(spotifyApi, theCurrentUserId);
-
-			// Add playlist id if a similarly named playlist is already present
-			venues = venues.map(function(venue) {
-				for (let i = 0; i < theCurrentUserPlaylists.length; i++) {
-					if (theCurrentUserPlaylists[i].name == venue.name + ", " + location) {
-						venue.spotifyPlaylistId = theCurrentUserPlaylists[i].id;
-						venue.totalTracks = theCurrentUserPlaylists[i].tracks.total;
-					}
-				}
-				return venue;
-			});
-
-			// Create playlist if venue does not have spotifyPlaylistId
-			venues = await Promise.all(
+			// Subscribe to all playlists
+			await Promise.all(
 				venues.map(async venue => {
-					if (!venue.spotifyPlaylistId) {
-						await spot.createUserPlaylist(spotifyApi, theCurrentUserId, venue, location);
-					}
-					return await venue;
-				})
-			);
-
-			// Replace all tracks in the playlist
-			venues = await Promise.all(
-				venues.map(async venue => {
-					return await spot.replaceAllTracksInPlaylist(spotifyApi, theCurrentUserId, venue);
+					await spot.subscribePlaylist(spotifyApi, venue);
 				})
 			);
 
 			resolve(true);  // success
-		}
-
-		catch {
-			resolve(false);  // failure
-		}
-	});
-}
+	})
+		.catch((error) => {
+			reject(error);
+		});
+};
 
 module.exports = function(app) {
 	// initialize redis for sessions
@@ -152,7 +125,6 @@ module.exports = function(app) {
     	if (req.session.access_token) {
     		req.session.location = location;
     	}
-
 		return await playlistsSchema.findOne({name: location}, function(error, data) {
 			if (!error) {
 				return res.status(200).send(data);
