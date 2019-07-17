@@ -5,6 +5,7 @@ import ReactTooltip from 'react-tooltip';
 const Toggle = React.lazy(() => import('./toggle.js'));
 const SaveButton = React.lazy(() => import('./savebutton.js'));
 const LoginButton = React.lazy(() => import('./loginbutton.js'));
+const Cart = React.lazy(() => import('./cart.js'));
 const Venues = React.lazy(() => import('./venues.js'));
 
 class App extends React.Component {
@@ -53,7 +54,7 @@ class App extends React.Component {
 			}
 
 			allVenues.sort(function(a,b) {
-				if (a.avgPopularity > b.avgPopularity) {
+				if (a.artists.length > b.artists.length) {
 					return -1;
 				}
 				return 1;
@@ -73,7 +74,12 @@ class App extends React.Component {
 						<LoginButton />
 					</Suspense>
 				</div>
-				<h4>Top Venues</h4>
+				<div className='cart'>
+					<h3>Cart</h3>
+					<Suspense fallback={<div>Loading</div>}>
+					<Cart />
+					</Suspense>
+				</div>
 				<ReactTooltip type='light' border='true'/>
 				{allVenues.length > 0 && < Suspense fallback={<div>Loading</div>}>
 					<Venues venues={allVenues}/>

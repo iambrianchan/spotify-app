@@ -43,7 +43,7 @@ class Venues extends React.Component {
 			            height={height}
 			            isScrolling={isScrolling}
 			            rowCount={allVenues.length}
-			            rowHeight={350}
+			            rowHeight={250}
 			            rowRenderer={rowRenderer}
 			            scrollTop={scrollTop}
 			            width={700}

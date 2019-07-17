@@ -20,11 +20,17 @@ class Venue extends React.Component {
 		return CityActions.toggleVenue(this.props.venue.name);
 	};
 
-	// Listen for venues clear, and set active to false.
+	// Listen for venues clear, or city change and clear the active state
 	componentWillMount() {
 		CityStore.on('venues clear', () => {
 			this.setState({
 				active: false 
+			});
+		});
+
+		CityStore.on('city change', () => {
+			this.setState({
+				active: false
 			});
 		});
 	}
