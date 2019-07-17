@@ -54,11 +54,14 @@ button {
 	margin: auto;
 }
 .venue {
-	text-align: right;
+	text-align: left;
 	padding: 10px 10px 20px 10px;
 	margin: 20px 20px 20px 20px;
 	border-radius: 16px;
 	cursor: pointer;
+	max-height: 350px;
+	max-width: 700px;
+	overflow-y: hidden;
 }
 .venue:hover {
 	background-color: $orange;
@@ -122,5 +125,8 @@ button {
 	}
 	.togglebutton {
 		margin-right: 10px;
+	}
+	.venue {
+		max-width: 350px;		
 	}
 }

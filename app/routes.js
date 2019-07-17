@@ -125,6 +125,15 @@ module.exports = function(app) {
     	if (req.session.access_token) {
     		req.session.location = location;
     	}
+    	if (location === 'all') {
+    		return await playlistsSchema.find({}, (error, data) => {
+    			if (!error) {
+    				console.log(data);
+    				return res.status(200).send(data);
+    			}
+    			return res.status(500).send();
+    		})
+    	}
 		return await playlistsSchema.findOne({name: location}, function(error, data) {
 			if (!error) {
 				return res.status(200).send(data);

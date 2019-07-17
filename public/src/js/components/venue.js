@@ -1,7 +1,6 @@
 import * as CityActions from './../cityActions';
 import CityStore from './../cityStore';
-import Artist from './artist.jsx';
-import ReactTooltip from 'react-tooltip';
+import Artist from './artist.js';
 
 class Venue extends React.Component {
 	constructor() {
@@ -31,16 +30,17 @@ class Venue extends React.Component {
 	}
 
 	render() {
+		const venue = this.props.venue;
+		const artists = this.props.venue.artists;
 		// Map an array of artist components from the venue.
-		let allArtists = this.props.venue.artists.map(artist => {
+		let allArtists = artists.map(artist => {
 			return(
 				<Artist key={artist._id} artist={artist}/>
 			)
 		});
 		return (
 			<div className={this.state.active ? 'active-venue venue' : 'venue'} onClick={this.toggleVenue}>
-			<div className='venue-title'>{this.props.venue.name}</div>
-			<ReactTooltip type='light' border='true'/>
+			<div className='venue-title'>{venue.name}</div>
 			{allArtists}
 			</div>
 		)
