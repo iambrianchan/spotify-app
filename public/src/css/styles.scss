@@ -5,9 +5,13 @@ $white: #EBEDF2;
 $darkgray: #373740;
 $lightgray: #D5E2F2;
 
+*:focus {
+    outline: none;
+}
+
 body {
 	background-color: $black;
-	font-family: 'Open Sans', sans-serif;	
+	font-family: 'Open Sans', sans-serif;
 }
 
 #title {
@@ -53,12 +57,23 @@ button {
 	display: block;
 	margin: auto;
 }
+div.cart {
+	margin: 0 auto;
+	width: 50vw;
+}
+div.cart h3 {
+	text-align: center;
+	color: $white;
+}
 .venue {
-	text-align: right;
+	text-align: left;
 	padding: 10px 10px 20px 10px;
 	margin: 20px 20px 20px 20px;
 	border-radius: 16px;
 	cursor: pointer;
+	max-height: 235px;
+	max-width: 700px;
+	overflow-y: hidden;
 }
 .venue:hover {
 	background-color: $orange;
@@ -122,5 +137,8 @@ button {
 	}
 	.togglebutton {
 		margin-right: 10px;
+	}
+	.venue {
+		max-width: 350px;		
 	}
 }

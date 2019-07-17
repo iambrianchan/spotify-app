@@ -10,7 +10,7 @@ export function authorize() {
 		path: '/auth'
 	};
 
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		let request = http.get(options, (response) => {
 			let data = '';
 
@@ -44,7 +44,7 @@ function requestCity(location) {
 		path: path
 	};
 
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		let request = http.get(options, (response) => {
 			let data = '';
 
@@ -95,7 +95,7 @@ export function savePlaylists(venuesArray) {
 		headers: {'Content-Type': 'application/json'}
 	};
 
-	return new Promise(function(resolve, reject) {
+	return new Promise((resolve, reject) => {
 		let request = http.request(options, (response) => {
 			let data = '';
 

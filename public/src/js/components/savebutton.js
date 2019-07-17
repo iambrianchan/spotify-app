@@ -27,7 +27,7 @@ class SaveButton extends React.Component {
 
 	// Notify browser of save result.
 	notifyBrowserOfSaveResult(successfulSave) {
-		let message = successfulSave == true ? 'Saved the selected spotify playlists to your account!' : 'An error occurred and the playlists were not saved to your account';
+		let message = successfulSave == true ? 'Subscribed the selected spotify playlists to your account!' : 'An error occurred and the playlists were not saved to your account';
 		return window.alert(message);
 	}
 
@@ -48,7 +48,7 @@ class SaveButton extends React.Component {
 		return (
 			<div>
 				{this.state.hasCookie &&
-					<button className='save-button' onClick={this.savePlaylists}>Create Spotify Playlists</button>
+					<button className='save-button' onClick={this.savePlaylists}>Subscribe Spotify Playlists</button>
 				}
 			</div>
 		)

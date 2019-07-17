@@ -23,17 +23,20 @@
     "react-ga": "^2.6.0",
     "react-router-dom": "^5.0.1",
     "react-tooltip": "^3.10.0",
+    "react-virtualized": "^9.21.1",
     "redis": "^2.8.0",
+    "regenerator-runtime": "^0.13.2",
     "spotify-web-api-node": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.6.0",
     "babel-loader": "^8.0.6",
     "browser-sync": "^2.26.7",
-    "cp": "^0.2.0",
+    "css-loader": "^3.0.0",
     "cssnano": "^4.1.10",
     "del": "^4.1.1",
     "gulp": "^4.0.2",
@@ -45,6 +48,7 @@
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
+    "style-loader": "^0.23.1",
     "webpack": "^4.35.2",
     "webpack-stream": "^5.2.1"
   }

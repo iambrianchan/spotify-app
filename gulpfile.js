@@ -3,7 +3,6 @@
 // Load plugins
 const autoprefixer = require("autoprefixer");
 const browsersync = require("browser-sync").create();
-const cp = require("child_process");
 const cssnano = require("cssnano");
 const del = require("del");
 const eslint = require("gulp-eslint");
@@ -86,7 +85,7 @@ function css() {
 // Lint scripts
 function scriptsLint() {
   return gulp
-    .src(["./public/src/*/*.js", "./gulpfile.js"])
+    .src(["./public/src/*/*.js", "./gulpfile.js", "./webpack.config.js"])
     .pipe(plumber())
     .pipe(eslint())
     .pipe(eslint.format())
@@ -106,17 +105,14 @@ function scripts() {
   );
 }
 
-// Jekyll
-function jekyll() {
-  return cp.spawn("bundle", ["exec", "jekyll", "build"], { stdio: "inherit" });
-}
-
 // Watch files
 function watchFiles() {
   gulp.watch("./public/src/views/*", pugTask);
   gulp.watch("./public/src/css/*", css);
   gulp.watch("./public/src/js/*", gulp.series(scriptsLint, scripts));
   gulp.watch("./public/src/js/components/*", gulp.series(scriptsLint, scripts));
+  gulp.watch("./gulpfile.js", gulp.series(scriptsLint, scripts));
+  gulp.watch("./webpack.config.js", gulp.series(scriptsLint, scripts));
   gulp.watch(
     [
       "./_includes/**/*",
@@ -125,7 +121,7 @@ function watchFiles() {
       "./_posts/**/*",
       "./_projects/**/*"
     ],
-    gulp.series(jekyll, browserSyncReload)
+    gulp.series(browserSyncReload)
   );
   gulp.watch("./public/src/img/*", images);
 }
@@ -139,7 +135,6 @@ const watch = gulp.parallel(watchFiles, browserSync);
 exports.images = images;
 exports.css = css;
 exports.js = js;
-exports.jekyll = jekyll;
 exports.clean = clean;
 exports.build = build;
 exports.watch = watch;

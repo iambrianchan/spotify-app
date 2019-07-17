@@ -1,7 +1,3 @@
-import * as CityActions from './../cityActions';
-import CityStore from './../cityStore';
-import ReactTooltip from 'react-tooltip';
-
 class Artist extends React.Component {
 	constructor() {
 		super();

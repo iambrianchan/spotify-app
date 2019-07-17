@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-
 import dispatcher from "./dispatcher";
 
 class CityStore extends EventEmitter {
@@ -48,7 +47,7 @@ class CityStore extends EventEmitter {
 
 			case "CHANGE_CITY": {
 				this.updateCity(action.city);
-
+				this.clearAllVenues();
 				this.emit("city change");
 				break;
 			}
