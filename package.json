@@ -17,7 +17,7 @@
     "js-cookie": "^2.2.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.6.1",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-ga": "^2.6.0",
